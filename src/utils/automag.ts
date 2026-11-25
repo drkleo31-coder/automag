@@ -1,5 +1,10 @@
 export interface ServiceItem {
-  id: 'lavagem-simples' | 'lavagem-completa' | 'lavagem-com-cera' | 'higienizacao-de-bancos' | 'polimentos';
+  id:
+    | 'lavagem-simples'
+    | 'lavagem-completa'
+    | 'lavagem-com-cera'
+    | 'higienizacao-de-bancos'
+    | 'polimentos';
   index: string;
   title: string;
   subtitle: string;
@@ -51,7 +56,12 @@ export function clampSliderPercentage(
   rectLeft: number,
   rectWidth: number
 ): number {
-  if (!Number.isFinite(clientX) || !Number.isFinite(rectLeft) || !Number.isFinite(rectWidth) || rectWidth <= 0) {
+  if (
+    !Number.isFinite(clientX) ||
+    !Number.isFinite(rectLeft) ||
+    !Number.isFinite(rectWidth) ||
+    rectWidth <= 0
+  ) {
     return 50;
   }
   const raw = ((clientX - rectLeft) / rectWidth) * 100;
@@ -74,6 +84,62 @@ export function stepSliderPercentage(current: number, key: string, step: number 
       return 100;
     default:
       return safeCurrent;
+  }
+}
+
+export interface InspectionPoint {
+  x: number;
+  y: number;
+}
+
+export function clampInspectionCoordinates(
+  clientX: number,
+  clientY: number,
+  rectLeft: number,
+  rectTop: number,
+  rectWidth: number,
+  rectHeight: number
+): InspectionPoint {
+  if (
+    !Number.isFinite(clientX) ||
+    !Number.isFinite(clientY) ||
+    !Number.isFinite(rectLeft) ||
+    !Number.isFinite(rectTop) ||
+    !Number.isFinite(rectWidth) ||
+    !Number.isFinite(rectHeight) ||
+    rectWidth <= 0 ||
+    rectHeight <= 0
+  ) {
+    return { x: 50, y: 50 };
+  }
+  const rawX = ((clientX - rectLeft) / rectWidth) * 100;
+  const rawY = ((clientY - rectTop) / rectHeight) * 100;
+  return {
+    x: Math.round(Math.max(6, Math.min(94, rawX)) * 10) / 10,
+    y: Math.round(Math.max(10, Math.min(90, rawY)) * 10) / 10,
+  };
+}
+
+export function stepInspectionCoordinates(
+  current: InspectionPoint,
+  key: string,
+  step: number = 6
+): InspectionPoint {
+  const safeX = Number.isFinite(current.x) ? Math.max(6, Math.min(94, current.x)) : 50;
+  const safeY = Number.isFinite(current.y) ? Math.max(10, Math.min(90, current.y)) : 50;
+  switch (key) {
+    case 'ArrowLeft':
+      return { x: Math.max(6, safeX - step), y: safeY };
+    case 'ArrowRight':
+      return { x: Math.min(94, safeX + step), y: safeY };
+    case 'ArrowUp':
+      return { x: safeX, y: Math.max(10, safeY - step) };
+    case 'ArrowDown':
+      return { x: safeX, y: Math.min(90, safeY + step) };
+    case 'Home':
+      return { x: 50, y: 50 };
+    default:
+      return { x: safeX, y: safeY };
   }
 }
 
@@ -102,50 +168,50 @@ export const SERVICES: ServiceItem[] = [
     id: 'lavagem-simples',
     index: '01',
     title: 'Lavagem simples',
-    subtitle: 'Manutenção externa essencial',
+    subtitle: 'Cuidado essencial',
     description:
-      'Limpeza cuidadosa da carroceria, vidros e rodas com remoção segura da sujeira superficial, preservando o acabamento da pintura no dia a dia.',
-    highlights: ['Pré-lavagem técnica', 'Limpeza de rodas', 'Secagem com microfibra'],
+      'Serviço de lavagem simples para manutenção visual e limpeza prática do veículo no dia a dia.',
+    highlights: ['Lavagem simples', 'Cuidado visual', 'Agendamento direto'],
     interactionType: 'water',
   },
   {
     id: 'lavagem-completa',
     index: '02',
     title: 'Lavagem completa',
-    subtitle: 'Cuidado integral externo e interno',
+    subtitle: 'Atendimento completo',
     description:
-      'Tratamento minucioso da parte externa somado à limpeza detalhada da cabine, painel, console, tapetes e caixas de roda para devolver a sensação de carro bem cuidado.',
-    highlights: ['Carroceria e vãos de porta', 'Aspiração e acabamento interno', 'Caixas de roda e vidros'],
+      'Serviço de lavagem completa pensado para quem busca um cuidado mais abrangente na apresentação do veículo.',
+    highlights: ['Lavagem completa', 'Visão geral do veículo', 'Atendimento dedicado'],
     interactionType: 'zones',
   },
   {
     id: 'lavagem-com-cera',
     index: '03',
     title: 'Lavagem com cera',
-    subtitle: 'Brilho intenso e toque acetinado',
+    subtitle: 'Lavagem e aplicação de cera',
     description:
-      'Une a limpeza completa da lataria à aplicação de cera protetora de alto brilho, realçando a profundidade da cor e facilitando a repelência à água.',
-    highlights: ['Realce de brilho na pintura', 'Camada protetora hidrofóbica', 'Acabamento uniforme'],
+      'Combina a lavagem do veículo com a aplicação de cera para valorizar o acabamento visual da pintura.',
+    highlights: ['Lavagem do veículo', 'Aplicação de cera', 'Realce visual'],
     interactionType: 'wax',
   },
   {
     id: 'higienizacao-de-bancos',
     index: '04',
     title: 'Higienização de bancos',
-    subtitle: 'Limpeza profunda do estofamento',
+    subtitle: 'Cuidado para os bancos',
     description:
-      'Remoção criteriosa de manchas, resíduos impregnados e odores em bancos de tecido ou couro, renovando o conforto visual e o toque original do interior.',
-    highlights: ['Extração de sujidades', 'Cuidado específico por material', 'Renovação visual da cabine'],
+      'Serviço dedicado à higienização dos bancos do veículo, buscando melhorar a apresentação visual do interior.',
+    highlights: ['Higienização de bancos', 'Cuidado com o interior', 'Atendimento sob consulta'],
     interactionType: 'seats',
   },
   {
     id: 'polimentos',
     index: '05',
     title: 'Polimentos',
-    subtitle: 'Correção e nivelamento de verniz',
+    subtitle: 'Realce visual da pintura',
     description:
-      'Processo técnico voltado à redução de micro-riscos, marcas de lavagem e opacidade do verniz, recuperando a nitidez dos reflexos e o espelhamento da pintura.',
-    highlights: ['Redução de hologramas e riscos leves', 'Restauração da nitidez de reflexo', 'Acabamento de estúdio'],
+      'Serviço voltado ao polimento automotivo, com foco no acabamento e na valorização dos reflexos da lataria.',
+    highlights: ['Polimento automotivo', 'Realce de reflexos', 'Inspeção interativa'],
     interactionType: 'polish',
   },
 ];

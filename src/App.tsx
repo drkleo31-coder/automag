@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Navbar } from './components/Navbar';
+import { StudioBackdrop } from './components/StudioBackdrop';
 import { HeroSection } from './components/HeroSection';
 import { TransformationSection } from './components/TransformationSection';
 import { ServicesSection } from './components/ServicesSection';
@@ -16,7 +17,9 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#050507] text-zinc-100">
+    <div className="relative min-h-screen bg-[#050507] text-zinc-100">
+      <StudioBackdrop />
+
       {mapsQuotaExceeded && (
         <div className="bg-amber-50 border-b border-amber-200 text-amber-900 px-4 py-2.5 text-xs md:text-sm text-center sticky top-0 z-50 shadow-sm">
           <span>
@@ -35,13 +38,15 @@ export default function App() {
       )}
 
       <Navbar />
-      <main>
+      <main className="relative z-10">
         <HeroSection />
         <TransformationSection />
         <ServicesSection />
         <LocationSection />
       </main>
-      <Footer />
+      <div className="relative z-10">
+        <Footer />
+      </div>
     </div>
   );
 }

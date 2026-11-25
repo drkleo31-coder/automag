@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import {
   APILoadingStatus,
   APIProvider,
@@ -162,16 +163,33 @@ function InteractiveGoogleMapCanvas({ onFallbackNeeded }: { onFallbackNeeded: ()
 export function LocationSection() {
   const apiKey = getMapsApiKey();
   const [useEmbedFallback, setUseEmbedFallback] = useState(!apiKey);
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <section
       id="localizacao"
-      className="relative border-t border-white/10 bg-[#050507] py-20 sm:py-28"
+      className="relative overflow-hidden border-t border-white/10 bg-[#050507] py-20 sm:py-28"
     >
+      {/* Animated section seam divider */}
+      <motion.div
+        aria-hidden="true"
+        initial={shouldReduceMotion ? false : { scaleX: 0, opacity: 0 }}
+        whileInView={{ scaleX: 1, opacity: 1 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+        className="pointer-events-none absolute inset-x-0 top-0 h-px origin-right bg-gradient-to-l from-[#E10600]/75 via-[#E10600]/20 to-transparent"
+      />
+
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-12">
           {/* Left Column: Address & Direct Route / Booking Actions */}
-          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-[#0C0C10] p-6 sm:p-8 lg:col-span-5">
+          <motion.div
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.58, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col justify-between rounded-xl border border-white/10 bg-[#0C0C10] p-6 sm:p-8 lg:col-span-5"
+          >
             <div>
               <p className="text-xs font-semibold tracking-wider text-[#E10600]">Localização</p>
               <h2
@@ -226,10 +244,14 @@ export function LocationSection() {
                 <span>Agendar pelo WhatsApp</span>
               </a>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Integrated Google Maps */}
-          <div
+          <motion.div
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 20, scale: 0.985 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.62, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
             data-testid="automag-map"
             className="h-[360px] overflow-hidden rounded-xl border border-white/10 bg-[#0C0C10] sm:h-[440px] lg:col-span-7 lg:h-auto lg:min-h-[460px]"
           >
@@ -240,7 +262,7 @@ export function LocationSection() {
             ) : (
               <EmbeddedMapFallback />
             )}
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
