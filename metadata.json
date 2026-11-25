@@ -1,0 +1,6 @@
+{
+  "name": "AUTO MAG — Estética Automotiva",
+  "description": "Experiência digital premium da AUTO MAG — Estética Automotiva em Pirassununga, SP. Agendamento via WhatsApp, antes e depois interativo e serviços especializados.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
